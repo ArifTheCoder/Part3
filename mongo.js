@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const keys = require('./keys')
 
-const url = `mongodb+srv://harif:${keys}@cluster0-eabtm.mongodb.net/test?retryWrites=true`
+const url = `mongodb+srv://harif:arif12345@cluster0-eabtm.mongodb.net/test?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true }, function (err) {
   if (err) throw err;
