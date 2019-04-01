@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
-const url = `mongodb+srv://harif:arif12345@cluster0-eabtm.mongodb.net/test?retryWrites=true`
+const url = `mongodb+srv://arif12345:arif12345@cluster0-lfntq.mongodb.net/test?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true }, function (err) {
   if (err) throw err;
-  console.log('connected')
+  console.log('connected with database')
 })
 
 let db = mongoose.connection
@@ -24,7 +24,7 @@ if (process.argv[2]) {
   person
       .save()
       .then(response => {
-          console.log(`adding person ${process.argv[2]} number ${process.argv[3]} to the directory`)
+          console.log(`person with name ${process.argv[2]}  & number ${process.argv[3]} has been added`)
           db.close()
       })
 } else {

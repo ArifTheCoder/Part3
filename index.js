@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static('build'));
 
 
-const formatPerson = (person) => {
+const personModel = (person) => {
     return {
         name: person.name,
         number: person.number,
@@ -22,39 +22,39 @@ const formatPerson = (person) => {
 
 
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (req, res) => {
     Person
         .find({})
         .then(persons => {
-            response.json(persons.map(formatPerson))
+            res.json(persons.map(personModel))
         })
         .catch(error => {
-        response.status(400).send({error: `error in finding persons`})
+        res.status(400).send({error: `error in search`})
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = (request.params.id)
+app.get('/api/persons/:id', (req, res) => {
+    const id = (req.params.id)
     Person.findById(id)
         .then(person => {
             if (person) {
-                response.json(person)
-            } else { response.status(404).end()}
+                res.json(person)
+            } else { res.status(404).end()}
         })
         .catch(error => {
-            response.status(400).send({error: `no ${id} found`})
+            res.status(400).send({error: `no person found with ID ${id}`})
         })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = (request.params.id)
+app.delete('/api/persons/:id', (req, res) => {
+    const id = (req.params.id)
     Person
         .findByIdAndRemove(id)
         .then(result => {
-            response.status(204).end()
+            res.status(204).end()
         })
         .catch(error => {
-            response.status(400).send({error: `no ${id} found`})
+            res.status(400).send({error: `no person found with ID ${id}`})
         })
 })
 
@@ -63,28 +63,26 @@ const generateId = () => {
     return parseInt(random*10000)
 }
 
-app.post('/api/persons', (request, response) => {
-    const person = new Person(request.body)
-    console.log(`reguest body: ${person}`)
+app.post('/api/persons', (req, res) => {
+    const person = new Person(req.body)
+    console.log(`person in reguest body: ${person}`)
 
 
     if (person.name === '') {
-        console.log('fill name')
-        return response.status(400).json({error: 'name missing'})
+        return res.status(400).json({error: 'name missing'})
     }
 
     if (person.number === '') {
-        console.log('fill number')
-        return response.status(400).json({error: 'number missing'})
+        return res.status(400).json({error: 'number missing'})
     }
 
     person
         .save()
-        .then(savedPerson => {
-            response.json(formatPerson(savedPerson))
+        .then(personSaved => {
+            res.json(personModel(personSaved))
         })
         .catch( error => {
-            response.status(400).send({error: `error in save`})
+            res.status(400).send({error: `error in saving person`})
         })
     
 
